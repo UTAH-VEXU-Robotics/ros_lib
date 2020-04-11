@@ -1,13 +1,18 @@
 #include "main.h"
-#include "ros_lib/rosserial_vex_v5/examples/helloworld.h"
+#include "ros_lib/api.h"
+#include "ros_lib/sensor_msgs/Joy.h"
 
-#include "ros_lib/ros.h"
-#include "ros_lib/std_msgs/String.h"
+#include <iostream>
 
 void initialize() {}
 void autonomous() {}
 void disabled() {}
 void competition_initialize() {}
+
+void subCallback(const std_msgs::Bool& isBool){
+    //do stuff here
+    std::cout << "bool " << isBool.data << "\n";
+}
 
 void opcontrol() {
     // debug logging
@@ -20,6 +25,10 @@ void opcontrol() {
     nh.initNode();
     nh.advertise(chatter);
 
+    // set up a subscriber
+    ros::Subscriber<std_msgs::Bool> sub("bool_msgs", &subCallback);
+    nh.subscribe(sub);
+
     // message data variable.
     char* msg = (char*) malloc(20 * sizeof(char));
 
@@ -28,7 +37,7 @@ void opcontrol() {
     	sprintf(msg, "[%d] Hello there!!", (int) pros::c::millis());
 		str_msg.data = msg;
 		chatter.publish( &str_msg );
-		nh.spinOnce();
-		delay(20);
+	  	nh.spinOnce();
+  		delay(20);
     }
 }

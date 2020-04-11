@@ -92,4 +92,3 @@ It is possible that the ports being used (user vs. system) got switched around,
 and need to reset.
 
 This project is similar to [Rosserial Arduino](http://wiki.ros.org/rosserial_arduino/Tutorials) in usage, so refer to these tutorials for even more information.
-
