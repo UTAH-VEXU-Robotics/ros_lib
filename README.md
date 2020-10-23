@@ -6,7 +6,7 @@ This is a library for creating a ROS Node with a V5 Brain using PROS.
   1. Linux (Only tested on Ubuntu 18.04LTS) (possible on windows with a Linux 
   virtual machine, provided there is USB support)
   2. ROS installed on Linux (Only tested on ROS Melodic) - [installation guide](http://wiki.ros.org/melodic/Installation/Source).
-  3. PROS installed on Linux - [installation guide](https://pros.cs.purdue.edu/cortex/getting-started/index.html)
+  3. PROS installed on Linux - [installation guide](https://pros.cs.purdue.edu/v5/getting-started/index.html)
 - Hardware:
   1. VEX essentials:
     - V5 Robot Brain
