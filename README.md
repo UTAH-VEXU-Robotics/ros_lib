@@ -1,5 +1,7 @@
-# ros_lib
-This is a library for creating a ROS Node with a V5 Brain using PROS.
+# rosserial for VEX V5
+
+This package contains everything needed to run rosserial on the VEX V5
+Robot Brain, on the PROS 3.x.x tooling.
 
 # Requirements
 - Software:
@@ -12,14 +14,6 @@ This is a library for creating a ROS Node with a V5 Brain using PROS.
     - V5 Robot Brain
     - V5 Robot Battery
     - MicroUSB cable
- 
-# Table Of Contents
-- [Setup](#setup)
-- [Examples](#examples)
-  - [Hello World Example](#hello-world-example)
-- [Generating Custom Messages](#generating-custom-messages)
-- [Speed](#speed)
-- [Troubleshooting](#troubleshooting)
 
 # Setup
 This setup requires knowledge of entering commands into a Linux terminal.
@@ -48,15 +42,26 @@ source /opt/ros/melodic/setup.bash
 mkdir -p ~/ros-vex-workspace/src; cd ~/ros-vex-workspace/src
 git clone https://github.com/ros-drivers/rosserial.git
 cd ..; catkin_make; catkin_make install
-source ~/ros-vex-workspace/install/setup.bash
 ```
 
-Next, generate a PROS project, which has the code that runs on the Robot Brain.
-The project can exist anywhere (it does NOT need to be inside the ROS workspace).
+### PROS Project
+
+1. Generate a PROS project. A PROS project has the code that runs on the Robot Brain.
+The project can exist anywhere (it should NOT need to be inside the ROS workspace). Also see the
+[getting-started documentation](https://pros.cs.purdue.edu/v5/getting-started/index.html) if you need help.
 
 ```bash
-git clone https://github.com/team914/ros_lib
-cd ros_lib
+cd ~
+prosv5 conductor new-project example-project-name
+```
+
+2. Download the newest ros_lib zip file template from it's [repository](https://github.com/UTAH-VEXU-Robotics/ros_lib/releases). 
+Then fetch and apply the template to your project by following below.
+
+```bash
+cd example-project-name
+prosv5 conductor fetch ~/Downloads/ros_lib@1.0.x.zip
+prosv5 conductor apply ros_lib@1.0.x
 ```
 
 # Examples
@@ -65,19 +70,76 @@ These examples are made to run out-of-the-box, and they made to be proof-of-conc
 what ROS can provide. ROS allows standardized messages to be sent to and from the Brain and an outside computer, 
 which allows for all kinds of ideas and projects to be organized with messages!
 
+To understand what is going on with the example code, look at the tutorials for the sister project, [Rosserial Arduino](http://wiki.ros.org/rosserial_arduino/Tutorials).
+
 Set up the physical download connection by plugging in the microUSB into the Robot Brain and into the computer.
 
+### Hello World Example
+
+To run the hello world example, make sure that the `hellow_world()` method in the `main.cpp` file is not commented.
+
+After doing that, run the following commands.
+
 ```bash
-cd ~/path/to/prosproject
-prosv5 mu --slot 1 --execute
-roslaunch rosserial_vex_v5 hello_world.launch
+source ~/ros-vex-workspace/install/setup.bash
+cd ~/example-project-name
+prosv5 mu --execute #this will make, upload, and execute the program to the brain
+roslaunch rosserial_vex_v5 hello_world.launch #run this so that the computer can talk to the brain
 ```
+
+### Sensors Example
+
+To run the sensors example, make sure that the `main.cpp` file looks like this:
+
+```cpp
+  //hello_world();
+  sensors();
+  //odometry();
+```
+
+*Note: you might also want to change the code in the `example-project-name/include/ros_lib/rosserial_vex_v5/examples/sensors.hpp` file.*
+
+After doing that, run the following commands.
+
+```bash
+source ~/ros-vex-workspace/install/setup.bash
+cd ~/example-project-name
+prosv5 mu --execute #this will make, upload, and execute the program to the brain
+roslaunch rosserial_vex_v5 hello_world.launch #run this so that the computer can talk to the brain
+```
+
+### Odometry Example
+
+To run the odometry example, make sure that the `main.cpp` file looks like this:
+
+```cpp
+  //hello_world();
+  //sensors();
+  odometry();
+```
+
+*Note: you might also want to change the code in the `example-project-name/include/ros_lib/rosserial_vex_v5/examples/odometry.hpp` file.*
+
+After doing that, run the following commands.
+
+```bash
+source ~/ros-vex-workspace/install/setup.bash
+cd ~/example-project-name
+prosv5 mu --execute #this will make, upload, and execute the program to the brain
+roslaunch rosserial_vex_v5 odometry.launch #run this so that the computer can talk to the brain
+```
+
+There is a [video](https://youtu.be/_WbhUeprUS8) that shows what this should look like.
+
 
 # Generating Custom Messages
 To design you own ROS messages, it is necessary to add the `msgs` directory to this project,
 add the `message_generation` dependency, and make several modifications to this project's `CMakeLists.txt`.
 This infrastructure is removed from this project by default,
 because there are many useful built-in message types that are used commonly across ROS packages anyway.
+
+See documentation and source of sister packages, such as `rosserial_arduino`,
+for more information about generating custom messages.
 
 ### Platforms
 This has been developed and tested on ROS melodic, but it should work on many earier/later versions as well.
